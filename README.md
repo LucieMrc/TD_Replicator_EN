@@ -1,65 +1,65 @@
 # Replicator COMP in TouchDesigner
 
-*Ou comment utiliser le Replicator COMP dans TouchDesigner pour cloner des composants à partir d'un tableau de données.*
+*On how to use the Replicator COMP in TouchDesigner to clone components with a data DAT.*
 
-- Le tuto [introduction à Touchdesigner](https://github.com/LucieMrc/IntroTD_FR)
+- The [introduction to Touchdesigner](https://github.com/LucieMrc/IntroTD)
 
 ![screen de TD](./images/screen1.png)
-*Network de base de Replicator*
+*Replicator basic network*
 
-# Le Replicator COMP
+# The Replicator COMP
 
 ![screen de TD](./images/screen3.png)
 
-Le `Replicator` COMP va créer des objets "clones" à partir d'un objet "master" de base, en suivant une base de données. Il faut donc préciser au Replicator quel DAT est la base de données dans le paramètre "Template DAT Table", et quel node est le master dans le paramètre "Master Operator".
+The `Replicator` COMP will create "clones" items based on a "master" object, using a database. We need to specify to the Replicator which DAT is the data base in the "Template DAT Table" parameter and which node is the master in the "Master Operator" parameter.
 
-On peux choisir le nom des nodes "clones" avec le paramètre "Operator Prefix" ("item" par défaut).
+We can choose the name of the "clones" nodes with the "Operator Prefix" parameter (default is "item").
 
+# The database
 
-# Le tableau de données
-
-Il faut créer le tableau en sachant qu'on aura autant de clones que de ligne du tableau, et on peux avoir autant de colonnes que l'on veux.
+We need to create a database knowing we'll have as many clones as there is rows in the table, and we can have as many column as needed.
 
 ![screen de TD](./images/screen2.png)
 
-Ici par exemple, j'ai crée un tableau avec un `Noise` CHOP puis un `CHOP to` DAT, où je récupère 6 lignes de 2 colonnes, qui me permettront de créer 6 clones avec une position X et Y.
+Here, I create a table with a `Noise` CHOP and then a `CHOP to` DAT, where I get 6 rows and 2 columns that will allows me to create 6 clones with X and Y positions.
 
 ![screen de TD](./images/screen5.png)
 
-Dans le `Replicator` COMP, je fais glisser le `CHOP to` DAT dans le paramètre "Template DAT Table".
-Je choisis également "Row Index" dans le paramètre "Name From Table" (qui est normalement le paramètre par défaut) et je décoche "Ignore First Row" car ma première ligne sont des données.
+In the `Replicator` COMP, I drag and drop the `CHOP to` DAT in the "Template DAT Table" parameter.
+I also choose "Row Index" in the "Name From Table" parameter (which should be the default), and I turn off "Ignore First Row" as the first row are datas.
 
-# Le master
+# The master
 
-Le master node peut être un TOP, un SOP, etc, ou une `Base` COMP en fonction des besoins et de la complexité du network.
+The master node can be a TOP, a SOP, etc, or a `Base` COMP 
+Le master node peut être un TOP, un SOP, etc, ou une `Base` COMP depending on the needs and complexity of the network.
 
-Pour qu'il permette de créer les clones à son image avec les données du tableau, il faut que ces données soient dans un ou plusieurs de ses paramètres.
+In order to have clones copying the master with datas from the database, we need said dates to be in one or multiples of its parameters.
 
-Ici, je veux créer 6 cercles qui se déplacent en fonction des données du `Noise` CHOP. Je crée donc un `Circle` TOP.
+Here, I want to create 6 circles that moves based on the `Noise` CHOP datas. 
+
+I create a `Circle` TOP :
 
 ![screen de TD](./images/screen6.png)
 
-Pour que le cercle se déplace, je dois changer les paramètres X et Y "Center" qui définissent la position du centre du cercle.
+To have the circle moving, I need to change the X and Y "Center" parameter that defines the position of the center of the circle.
 
-On sélectionne une des cellules du tableau du node `chopto1` en écrivant "op('chopto1')" pour sélectionner le node, puis "[me.digits, 0]" pour sélectionner la cellule du rang "me.digits" et colonne 0 pour le paramètre X (et "[me.digits, 0]" pour la colonne 1 pour le paramètre Y).
+We select one of the cells of the `chopto1` table by writing "op('chopto1')" to select the node, then "[me.digits, 0]" to select the cell from the row "me.digits" and the column 0 for the X parameter (and  "[me.digits, 1]" for the column 1 for the Y parameter).
 
-"me.digits" permet de récupérer l'index du clone afin de récuperer les données du rang. 
+"me.digits" allows us to get the index from the clone to get the datas from its row.
 
-J'ai également réduit le diamètre du cercle avec le paramètre "Radius".
+I also decreased the size of the circle with the "Radius" parameter.
 
 ![screen de TD](./images/screen7.png)
 
-On fait glisser l'opérateur "circle1" sur le paramètre "Master Operator" dans le `Replicator` COMP.
+Finally, we drag and drop the "circle1" node on the "Master Operator" in the `Replicator` COMP.
 
-# Composer les items crées
+# Compose the clones items
 
 ![screen de TD](./images/screen4.png)
 
-On a donc les 6 clones, nommés item1 à item6.
-Afin de les composer et les afficher tous dans le même TOP, on crée un `Composite` TOP. Dans le paramètre "TOPs" du Composite, on écrit "item*" afin de sélectionner tous les nodes dont le nom commence par "item". 
-L'astérisque * signifie "tout".
+We have 6 clones, named from item1 to item6.
+To compose and display them in the same TOP, we create a `Composite` TOP.
+In the "TOPs" parameter of the Composite, we write "item*" to select every nodes which name starts with "item".
+The asterisk * means "all".
 
-On peux faire la même chose avec un `Merge` SOP si les items sont des objets 3D.
-
-
-# TD_Replicator_EN
+We can do the same thing with a `Merge` SOP if the items are 3D objects.
